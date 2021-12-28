@@ -24,12 +24,12 @@ type Area struct {
 }
 
 type AreaReduced struct {
-	BaseColor  [3]int
-	RemapColor [3]int
+	BaseColor  [4]int
+	RemapColor [4]int
 	Points     int
 	X          float64
 	Y          float64
-	Neighbors  []([3]int)
+	Neighbors  []([4]int)
 }
 
 // Some dumb JSON parser don't like bare list :<
@@ -42,13 +42,13 @@ func Connect(area1 *Area, area2 *Area) {
 	area2.Neighbors[area1] = struct{}{}
 }
 
-func EncodeColor(c color.Color) [3]int {
-	r, g, b, _ := c.RGBA()
-	return [3]int{int(r >> 8), int(g >> 8), int(b >> 8)} // TODO: check correctness?
+func EncodeColor(c color.Color) [4]int {
+	r, g, b, a := c.RGBA()
+	return [4]int{int(r >> 8), int(g >> 8), int(b >> 8), int(a >> 8)} // TODO: check correctness?
 }
 
 func (area *Area) Reduce() *AreaReduced {
-	nei := make([]([3]int), 0)
+	nei := make([]([4]int), 0)
 	for neiArea := range area.Neighbors {
 		nei = append(nei, EncodeColor(neiArea.BaseColor))
 	}
